@@ -17,12 +17,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
+import com.occassionreminder.service.UserService;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/occassionsreminder")
 public class Controller {
 	
+	UserService userService;
+	
+	public Controller(UserService userService) {
+		super();
+		this.userService = userService;
+	}
+
 	@GetMapping
 	public List<Occassion> getOccassions(){
 		ArrayList<Occassion> occassions = new ArrayList<Occassion>();
@@ -48,6 +56,7 @@ public class Controller {
 	public String registerUser(@RequestBody User user) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
+			userService.registerUser(user);
 			String json = mapper.writeValueAsString(user).toString();
 			System.out.println(json);
 			return json;

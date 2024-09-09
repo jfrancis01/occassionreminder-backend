@@ -1,8 +1,17 @@
 package com.occassionreminder.model;
 
+import io.micrometer.common.lang.NonNull;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="CUSTOM_USER")
 public class User {
 	
-	public User(int userID, String firstName, String lastName, String email, String password, String userGuid) {
+	public User(String userID, String firstName, String lastName, String email, String password, String userGuid) {
 		
 		this.userID = userID;
 		this.firstName = firstName;
@@ -16,11 +25,11 @@ public class User {
 		
 	}
 	
-	public int getUserID() {
+	public String getUserID() {
 		return userID;
 	}
 	
-	public void setUserID(int userID) {
+	public void setUserID(String userID) {
 		this.userID = userID;
 	}
 	
@@ -63,11 +72,23 @@ public class User {
 	public void setUserGuid(String userGuid) {
 		this.userGuid = userGuid;
 	}
-
+	
+	@Override
+	public String toString(){
+		return String.format("User[userID=%s, firstName='%s', lastName='%s', email='%s', password='%s'. userGuid='%s']", 
+				userID, firstName, lastName, email , password, userGuid);
+	}
+	
+	@NonNull
 	private String firstName;
+	@NonNull
 	private String lastName;
+	@NonNull
 	private String email;
+	@NonNull
 	private String password;
 	private String userGuid;
-	private int userID;
+	@Id
+	@GeneratedValue(strategy=GenerationType.UUID)
+	private String userID;
 }

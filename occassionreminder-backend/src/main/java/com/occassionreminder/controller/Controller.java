@@ -48,16 +48,15 @@ public class Controller {
 	}
 	
 	@PostMapping("/add")
-	public String createOccassion(@RequestBody Occassion occasion) {
-		return ("Created Occasion");
+	public String createOccassion(@RequestBody Occassion occassion) {
+		return "Occassion created";
 	}
 	
 	@PostMapping("/register")
 	public String registerUser(@RequestBody User user) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			userService.registerUser(user);
-			String json = mapper.writeValueAsString(user).toString();
+			String json = mapper.writeValueAsString(userService.registerUser(user)).toString();
 			System.out.println(json);
 			return json;
 		} catch (JsonProcessingException e) {

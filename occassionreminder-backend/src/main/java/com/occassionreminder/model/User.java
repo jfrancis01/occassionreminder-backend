@@ -1,24 +1,28 @@
 package com.occassionreminder.model;
 
+import java.util.Set;
+
 import io.micrometer.common.lang.NonNull;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="CUSTOM_USER")
 public class User {
 	
-	public User(String userID, String firstName, String lastName, String email, String password, String userGuid) {
+	public User(String userID, String firstName, String lastName, String email, String password) {
 		
 		this.userID = userID;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.password = password;
-		this.userGuid = userGuid;
 	}
 	
 	public User() {
@@ -64,19 +68,11 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getUserGuid() {
-		return userGuid;
-	}
-
-	public void setUserGuid(String userGuid) {
-		this.userGuid = userGuid;
-	}
 	
 	@Override
 	public String toString(){
-		return String.format("User[userID=%s, firstName='%s', lastName='%s', email='%s', password='%s'. userGuid='%s']", 
-				userID, firstName, lastName, email , password, userGuid);
+		return String.format("User[userID=%s, firstName='%s', lastName='%s', email='%s', password='%s']", 
+				userID, firstName, lastName, email , password);
 	}
 	
 	@NonNull
@@ -87,8 +83,11 @@ public class User {
 	private String email;
 	@NonNull
 	private String password;
-	private String userGuid;
 	@Id
 	@GeneratedValue(strategy=GenerationType.UUID)
 	private String userID;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name="userid")
+	private Set<Occassion> occassions;
 }

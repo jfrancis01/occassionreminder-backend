@@ -2,6 +2,16 @@ package com.occassionreminder.model;
 
 import java.util.Date;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="CUSTOM_OCCASSION")
 public class Occassion {
 
 	public int getOccassionID() {
@@ -51,14 +61,26 @@ public class Occassion {
 	public void setOffSetReminder(String offSetReminder) {
 		this.offSetReminder = offSetReminder;
 	}
+	
+	public String getUserID() {
+		return userID;
+	}
 
+	public void setUserID(String userID) {
+		this.userID = userID;
+	}
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int occassionID;
 	private String name;
 	private String occassionType;
 	private Date occasstionDate;
 	private boolean reminderOn;
 	private String offSetReminder;
+	private String userID;
 	
+
 	public Occassion() {
 		
 	}

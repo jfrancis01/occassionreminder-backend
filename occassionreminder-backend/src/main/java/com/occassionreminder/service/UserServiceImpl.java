@@ -45,7 +45,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ArrayList<Occassion> getOccassions(String userID) {
 		User user = userRepo.getById(userID);
-		return user.getOccassions();
+		ArrayList<Occassion> occassions = new ArrayList<Occassion>(user.getOccassions());
+		return occassions;
 	}
 
 }

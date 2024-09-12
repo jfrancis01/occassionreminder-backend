@@ -38,22 +38,6 @@ public class Controller {
 	@GetMapping("/occassions")
 	public List<Occassion> getOccassions(@RequestParam String  userID){
 		return this.userService.getOccassions(userID);
-		/*
-		 * ArrayList<Occassion> occassions = new ArrayList<Occassion>();
-		 * occassions.add(new Occassion("Joh Walsh",
-		 * MyConstants.OccassionType.Birthday.toString(), setDate(1985, 10, 19), true,
-		 * MyConstants.Offset.daybefore.toString())); occassions.add(new
-		 * Occassion("Wolf Blitz", MyConstants.OccassionType.Anniversary.toString(),
-		 * setDate(2017, 8, 05), true, MyConstants.Offset.dayoff.toString()));
-		 * occassions.add(new Occassion("Tejo Panda",
-		 * MyConstants.OccassionType.Birthday.toString(), setDate(2023, 4, 26), true,
-		 * MyConstants.Offset.weekbefore.toString())); occassions.add(new
-		 * Occassion("Markus Kane", MyConstants.OccassionType.Graduation.toString(),
-		 * setDate(2044, 4, 26), true, MyConstants.Offset.weekbefore.toString()));
-		 * occassions.add(new Occassion("Kiki Bambrick",
-		 * MyConstants.OccassionType.Confirmation.toString(), setDate(2029, 10, 1),
-		 * true, MyConstants.Offset.daybefore.toString())); return occassions;
-		 */
 	}
 	
 	@PostMapping("/add")

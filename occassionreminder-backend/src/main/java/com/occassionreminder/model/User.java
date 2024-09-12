@@ -1,6 +1,7 @@
 package com.occassionreminder.model;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
@@ -70,11 +71,11 @@ public class User {
 	}
 	
 
-	public ArrayList<Occassion> getOccassions() {
-		return occassions;
+	public Set<Occassion> getOccassions() {
+		return this.occassions;
 	}
 
-	public void setOccassions(ArrayList<Occassion> occassions) {
+	public void setOccassions(Set<Occassion> occassions) {
 		this.occassions = occassions;
 	}
 	
@@ -98,5 +99,5 @@ public class User {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="userid")
-	private ArrayList<Occassion> occassions;
+	private Set<Occassion> occassions;
 }

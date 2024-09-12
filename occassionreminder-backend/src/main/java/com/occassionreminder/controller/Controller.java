@@ -34,11 +34,25 @@ public class Controller {
 		this.userService = userService;
 		this.occassionService = occassionService;
 	}
+	
+	/**
+	 * This method gets all the Occassions depending on the 
+	 * logged in user
+	 * @param userID
+	 * @return
+	 */
 
 	@GetMapping("/occassions")
 	public List<Occassion> getOccassions(@RequestParam String  userID){
 		return this.userService.getOccassions(userID);
 	}
+	
+	/**
+	 * This method adds an occasion to the list of occassions 
+	 * for the logged in user
+	 * @param occassion
+	 * @return
+	 */
 	
 	@PostMapping("/add")
 	public String createOccassion(@RequestBody Occassion occassion) {
@@ -53,6 +67,12 @@ public class Controller {
 		}
 	}
 	
+	/**
+	 * This method allows a user to register using an
+	 * email and password
+	 * @param user
+	 * @return
+	 */
 	@PostMapping("/register")
 	public String registerUser(@RequestBody User user) {
 		ObjectMapper mapper = new ObjectMapper();

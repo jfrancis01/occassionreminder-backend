@@ -25,4 +25,18 @@ public class OccassionServiceImpl implements OccassionService {
 		Occassion back = this.occRepo.save(occassion);
 		return back.getOccassionID();
 	}
+
+
+	@Override
+	public void editOccassion(Occassion occassion) {
+		occRepo.save(occassion);
+	}
+
+
+	@Override
+	public Occassion getOccassion(int occassionID) {
+		return occRepo.findById(occassionID).get();
+	}
+	
+	
 }

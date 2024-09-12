@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,6 +49,18 @@ public class Controller {
 	}
 	
 	/**
+	 * This method is used to read a single occasion
+	 * @param occassionID
+	 * @return
+	 */
+	@GetMapping("/occassion")
+	public Occassion getOccassion(@RequestParam int occassionID) {
+		Occassion back = this.occassionService.getOccassion(occassionID);
+		System.out.print(back.toString());
+		return back;
+	}
+	
+	/**
 	 * This method adds an occasion to the list of occassions 
 	 * for the logged in user
 	 * @param occassion
@@ -66,6 +79,17 @@ public class Controller {
 			return e.getMessage();
 		}
 	}
+	
+	/**
+	 * This method updates an existing occassion record
+	 * @param occassion
+	 */
+	
+	@PutMapping("/edit")
+	public void editOccassion(@RequestBody Occassion occassion) {
+		occassionService.editOccassion(occassion);
+	}
+	
 	
 	/**
 	 * This method allows a user to register using an

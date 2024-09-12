@@ -39,11 +39,11 @@ public class Occassion {
 	}
 
 	public Date getOccasstionDate() {
-		return occasstionDate;
+		return occassionDate;
 	}
 
-	public void setOccasstionDate(Date occasstionDate) {
-		this.occasstionDate = occasstionDate;
+	public void setOccasstionDate(Date occassionDate) {
+		this.occassionDate = occassionDate;
 	}
 
 	public boolean isReminderOn() {
@@ -55,11 +55,11 @@ public class Occassion {
 	}
 
 	public String getOffSetReminder() {
-		return offSetReminder;
+		return offsetReminder;
 	}
 
-	public void setOffSetReminder(String offSetReminder) {
-		this.offSetReminder = offSetReminder;
+	public void setOffSetReminder(String offsetReminder) {
+		this.offsetReminder = offsetReminder;
 	}
 	
 	public String getUserID() {
@@ -75,25 +75,23 @@ public class Occassion {
 	private int occassionID;
 	private String name;
 	private String occassionType;
-	private Date occasstionDate;
+	private Date occassionDate;
 	private boolean reminderOn;
-	private String offSetReminder;
+	private String offsetReminder;
 	private String userID;
-	
 
 	public Occassion() {
 		
 	}
 	
-	public Occassion(int occassionID, String name, String occassionType, Date occasstionDate, boolean reminderOn,
-			String offSetReminder) {
+	public Occassion(String name, String occassionType, Date occassionDate, boolean reminderOn,
+			String offsetReminder) {
 		super();
-		this.occassionID = occassionID;
 		this.name = name;
 		this.occassionType = occassionType;
-		this.occasstionDate = occasstionDate;
+		this.occassionDate = occassionDate;
 		this.reminderOn = reminderOn;
-		this.offSetReminder = offSetReminder;
+		this.offsetReminder = offsetReminder;
 	}
 	
 }

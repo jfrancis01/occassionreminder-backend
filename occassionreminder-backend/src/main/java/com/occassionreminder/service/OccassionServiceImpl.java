@@ -1,5 +1,7 @@
 package com.occassionreminder.service;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Service;
 
 import com.occassionreminder.model.Occassion;
@@ -23,5 +25,4 @@ public class OccassionServiceImpl implements OccassionService {
 		Occassion back = this.occRepo.save(occassion);
 		return back.getOccassionID();
 	}
-
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
+import com.occassionreminder.service.OccassionService;
 import com.occassionreminder.service.UserService;
 
 @RestController
@@ -25,31 +27,46 @@ import com.occassionreminder.service.UserService;
 public class Controller {
 	
 	UserService userService;
+	OccassionService occassionService;
 	
-	public Controller(UserService userService) {
+	public Controller(UserService userService, OccassionService occassionService) {
 		super();
 		this.userService = userService;
+		this.occassionService = occassionService;
 	}
 
-	@GetMapping
-	public List<Occassion> getOccassions(){
-		ArrayList<Occassion> occassions = new ArrayList<Occassion>();
-		occassions.add(new Occassion(1, "Joh Walsh", MyConstants.OccassionType.Birthday.toString(), 
-				setDate(1985, 10, 19), true, MyConstants.Offset.daybefore.toString()));
-		occassions.add(new Occassion(1, "Wolf Blitz", MyConstants.OccassionType.Anniversary.toString(), 
-				setDate(2017, 8, 05), true, MyConstants.Offset.dayoff.toString()));
-		occassions.add(new Occassion(1, "Tejo Panda", MyConstants.OccassionType.Birthday.toString(), 
-				setDate(2023, 4, 26), true, MyConstants.Offset.weekbefore.toString()));
-		occassions.add(new Occassion(1, "Markus Kane", MyConstants.OccassionType.Graduation.toString(), 
-				setDate(2044, 4, 26), true, MyConstants.Offset.weekbefore.toString()));
-		occassions.add(new Occassion(1, "Kiki Bambrick", MyConstants.OccassionType.Confirmation.toString(), 
-				setDate(2029, 10, 1), true, MyConstants.Offset.daybefore.toString()));
-		return occassions;
+	@GetMapping("/occassions")
+	public List<Occassion> getOccassions(@RequestParam String  userID){
+		return this.userService.getOccassions(userID);
+		/*
+		 * ArrayList<Occassion> occassions = new ArrayList<Occassion>();
+		 * occassions.add(new Occassion("Joh Walsh",
+		 * MyConstants.OccassionType.Birthday.toString(), setDate(1985, 10, 19), true,
+		 * MyConstants.Offset.daybefore.toString())); occassions.add(new
+		 * Occassion("Wolf Blitz", MyConstants.OccassionType.Anniversary.toString(),
+		 * setDate(2017, 8, 05), true, MyConstants.Offset.dayoff.toString()));
+		 * occassions.add(new Occassion("Tejo Panda",
+		 * MyConstants.OccassionType.Birthday.toString(), setDate(2023, 4, 26), true,
+		 * MyConstants.Offset.weekbefore.toString())); occassions.add(new
+		 * Occassion("Markus Kane", MyConstants.OccassionType.Graduation.toString(),
+		 * setDate(2044, 4, 26), true, MyConstants.Offset.weekbefore.toString()));
+		 * occassions.add(new Occassion("Kiki Bambrick",
+		 * MyConstants.OccassionType.Confirmation.toString(), setDate(2029, 10, 1),
+		 * true, MyConstants.Offset.daybefore.toString())); return occassions;
+		 */
 	}
 	
 	@PostMapping("/add")
 	public String createOccassion(@RequestBody Occassion occassion) {
-		return "Occassion created";
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			String json = mapper.writeValueAsString(occassionService.addOccassion(occassion)).toString();
+			System.out.println(json);
+			return json;
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
 	}
 	
 	@PostMapping("/register")

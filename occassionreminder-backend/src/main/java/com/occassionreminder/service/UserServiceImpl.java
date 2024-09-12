@@ -1,7 +1,10 @@
 package com.occassionreminder.service;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Service;
 
+import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
 import com.occassionreminder.repository.UserRepository;
 
@@ -37,6 +40,12 @@ public class UserServiceImpl implements UserService {
 	public User getUserProfile(String userID) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ArrayList<Occassion> getOccassions(String userID) {
+		User user = userRepo.getById(userID);
+		return user.getOccassions();
 	}
 
 }

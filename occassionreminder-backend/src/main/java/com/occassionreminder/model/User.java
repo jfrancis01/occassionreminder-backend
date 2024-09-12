@@ -1,6 +1,6 @@
 package com.occassionreminder.model;
 
-import java.util.Set;
+import java.util.ArrayList;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
@@ -69,6 +69,15 @@ public class User {
 		this.password = password;
 	}
 	
+
+	public ArrayList<Occassion> getOccassions() {
+		return occassions;
+	}
+
+	public void setOccassions(ArrayList<Occassion> occassions) {
+		this.occassions = occassions;
+	}
+	
 	@Override
 	public String toString(){
 		return String.format("User[userID=%s, firstName='%s', lastName='%s', email='%s', password='%s']", 
@@ -89,5 +98,5 @@ public class User {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name="userid")
-	private Set<Occassion> occassions;
+	private ArrayList<Occassion> occassions;
 }

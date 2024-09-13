@@ -2,6 +2,11 @@ package com.occassionreminder.model;
 
 import java.util.Date;
 
+import org.antlr.v4.runtime.misc.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -73,11 +78,23 @@ public class Occassion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int occassionID;
+	@JsonProperty("name")
+	@NonNull
 	private String name;
+	@JsonProperty("occassionType")
+	@NonNull
 	private String occassionType;
+	@JsonProperty("occassionDate")
+	@NonNull
 	private Date occassionDate;
+	@JsonProperty("reminderOn")
+	@NonNull
 	private boolean reminderOn;
+	@JsonProperty("offsetReminder")
+	@NonNull
 	private String offsetReminder;
+	@JsonProperty("userID")
+	@NonNull
 	private String userID;
 
 	public Occassion() {

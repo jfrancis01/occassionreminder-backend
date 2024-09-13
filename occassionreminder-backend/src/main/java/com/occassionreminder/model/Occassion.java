@@ -2,8 +2,6 @@ package com.occassionreminder.model;
 
 import java.util.Date;
 
-import org.antlr.v4.runtime.misc.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.micrometer.common.lang.NonNull;

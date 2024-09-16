@@ -2,6 +2,8 @@ package com.occassionreminder.service;
 
 import java.util.ArrayList;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.occassionreminder.model.Occassion;
@@ -29,7 +31,13 @@ public class OccassionServiceImpl implements OccassionService {
 
 	@Override
 	public void editOccassion(Occassion occassion) {
-		occRepo.save(occassion);
+		Occassion original = occRepo.getById(occassion.getOccassionID());
+		original.setName(occassion.getName());
+		original.setOccassionType(occassion.getOccassionType());
+		original.setOccasstionDate(occassion.getOccasstionDate());
+		original.setOffSetReminder(occassion.getOffSetReminder());
+		original.setReminderOn(occassion.isReminderOn());
+		occRepo.save(original);
 	}
 
 

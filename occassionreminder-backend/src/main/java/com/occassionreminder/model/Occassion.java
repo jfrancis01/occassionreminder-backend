@@ -1,6 +1,10 @@
 package com.occassionreminder.model;
 
+import java.time.Instant;
 import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -92,6 +96,10 @@ public class Occassion {
 	@JsonProperty("userID")
 	@NonNull
 	private String userID;
+	@CreationTimestamp
+	private Date createdOn;
+	@UpdateTimestamp
+	private Instant lastUpdateON;
 
 	public Occassion() {
 		

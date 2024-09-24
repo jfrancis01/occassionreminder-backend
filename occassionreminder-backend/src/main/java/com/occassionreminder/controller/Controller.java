@@ -1,7 +1,7 @@
 package com.occassionreminder.controller;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
 import com.occassionreminder.service.OccassionService;
@@ -34,6 +33,12 @@ public class Controller {
 		super();
 		this.userService = userService;
 		this.occassionService = occassionService;
+	}
+	
+	@GetMapping("/welcome")
+	public String welcome() {
+		Calendar cal = Calendar.getInstance();
+		return "Welcome to the Occassions Reminder REST Service " + new Date(cal.getTimeInMillis());
 	}
 	
 	/**

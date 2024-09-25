@@ -2,6 +2,7 @@ package com.occassionreminder.service;
 
 import java.util.ArrayList;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.occassionreminder.model.Occassion;
@@ -12,16 +13,26 @@ import com.occassionreminder.repository.UserRepository;
 public class UserServiceImpl implements UserService {
 	
 	UserRepository userRepo;
+	PasswordEncoder passEncoder;
 
-	public UserServiceImpl(UserRepository userRepo) {
+	public UserServiceImpl(UserRepository userRepo, PasswordEncoder passEncoder) {
 		super();
+		this.passEncoder = passEncoder;
 		this.userRepo = userRepo;
 	}
 
 	@Override
 	public String registerUser(User user) {
-		User back = userRepo.save(user);
-		return "User saved with id: " + back.getUserID();
+		try {
+			
+			String hashPwd = passEncoder.encode(user.getPassword());
+			user.setPassword(hashPwd);
+			User back = userRepo.save(user);
+			return "User saved with id: " + back.getUserID();
+		}
+		catch(Exception ex) {
+			return "An exception occured: " + ex.getMessage();
+		}
 	}
 
 	@Override

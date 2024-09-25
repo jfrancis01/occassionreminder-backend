@@ -2,9 +2,11 @@ package com.occassionreminder.service;
 
 import java.util.ArrayList;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.occassionreminder.exceptions.AppException;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
 import com.occassionreminder.repository.UserRepository;
@@ -34,6 +36,8 @@ public class UserServiceImpl implements UserService {
 			return "An exception occured: " + ex.getMessage();
 		}
 	}
+	
+	
 
 	@Override
 	public String editUser(User user) {
@@ -58,6 +62,16 @@ public class UserServiceImpl implements UserService {
 		User user = userRepo.getById(userID);
 		ArrayList<Occassion> occassions = new ArrayList<Occassion>(user.getOccassions());
 		return occassions;
+	}
+
+	@Override
+	public String login(User user) {
+		User found = userRepo.findByEmail(user.getEmail())
+				.orElseThrow(()-> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+		if(passEncoder.matches(user.getPassword(), found.getPassword())) {
+			return found.getUserID();
+		}
+		return new AppException("Invalid password", HttpStatus.BAD_REQUEST).getMessage();
 	}
 
 }

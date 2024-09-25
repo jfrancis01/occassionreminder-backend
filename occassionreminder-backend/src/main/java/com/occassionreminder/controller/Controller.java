@@ -117,6 +117,11 @@ public class Controller {
 
 	}
 	
+	@PostMapping("/login")
+	public String login(@RequestBody User user) {
+		return userService.login(user);
+	}
+	
 	private Date setDate(int year, int month, int day) {
 		
 		Date currentDate = new Date();

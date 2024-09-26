@@ -122,6 +122,20 @@ public class Controller {
 		return userService.login(user);
 	}
 	
+	@GetMapping("/editUser")
+	public String editUser(@RequestParam String userID) {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			String json = mapper.writeValueAsString(userService.getUserProfile(userID)).toString();
+			System.out.println(json);
+			return json;
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+	
 	private Date setDate(int year, int month, int day) {
 		
 		Date currentDate = new Date();

@@ -8,5 +8,6 @@ import com.occassionreminder.model.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
 	
-	Optional<User> findByEmail(String email); 
+	Optional<User> findByEmail(String email);
+	Optional<User> findByUserID(String userID);
 }

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.exceptions.AppException;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
@@ -53,8 +55,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserProfile(String userID) {
-		// TODO Auto-generated method stub
-		return null;
+		User user = userRepo.findByUserID(userID).orElseThrow(()-> new AppException("User not found", HttpStatus.NOT_FOUND));
+		return user;
 	}
 
 	@Override

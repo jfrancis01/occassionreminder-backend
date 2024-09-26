@@ -19,6 +19,7 @@ public class ProjectSecurityConfig {
 	final String OCCASSIONS_LIST_URL = "/occassionsreminder/occassions";
 	final String OCCASIONS_ADD = "/occassionsreminder/add";
 	final String OCCASSIONS_EDIT = "/occassionsreminder/edit";
+	final String PROFILE_EDIT = "/occassionsreminder/editUser";
 	final String H2_CONSOLE_URL = "/h2/**";
 	
 	@Bean
@@ -26,7 +27,7 @@ public class ProjectSecurityConfig {
 		http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL).permitAll()
 				.requestMatchers(REGISTER_URL, LOGIN_URL, "/error").permitAll()
-				.requestMatchers(OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD).authenticated())
+				.requestMatchers(OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 		http.formLogin(withDefaults()); // this is a login page with a user name and password
 		http.httpBasic(withDefaults()); // this is header based

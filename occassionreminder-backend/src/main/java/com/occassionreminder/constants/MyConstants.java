@@ -27,5 +27,7 @@ public final class MyConstants {
 			}
 		}
 	}
-
+	
+	public static final String EMAIL_ALREADY_EXISTS = "Email already exists";
+	public static final String ERROR_OCCURED = "An error occured";
 }

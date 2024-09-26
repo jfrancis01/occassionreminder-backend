@@ -1,13 +1,14 @@
 package com.occassionreminder.service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.exceptions.AppException;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
@@ -15,7 +16,7 @@ import com.occassionreminder.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	UserRepository userRepo;
 	PasswordEncoder passEncoder;
 
@@ -26,20 +27,17 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String registerUser(User user) {
-		try {
-			
+	public ResponseEntity<String> registerUser(User user) {
+		Optional<User> check = userRepo.findByEmail(user.getEmail());
+		if (check.isPresent()) {
+			return new ResponseEntity(MyConstants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+		} else {
 			String hashPwd = passEncoder.encode(user.getPassword());
 			user.setPassword(hashPwd);
 			User back = userRepo.save(user);
-			return "User saved with id: " + back.getUserID();
-		}
-		catch(Exception ex) {
-			return "An exception occured: " + ex.getMessage();
+			return new ResponseEntity(back.getUserID(), HttpStatus.CREATED);
 		}
 	}
-	
-	
 
 	@Override
 	public String editUser(User user) {
@@ -55,7 +53,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserProfile(String userID) {
-		User user = userRepo.findByUserID(userID).orElseThrow(()-> new AppException("User not found", HttpStatus.NOT_FOUND));
+		User user = userRepo.findByUserID(userID)
+				.orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
 		return user;
 	}
 
@@ -69,8 +68,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String login(User user) {
 		User found = userRepo.findByEmail(user.getEmail())
-				.orElseThrow(()-> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-		if(passEncoder.matches(user.getPassword(), found.getPassword())) {
+				.orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
+		if (passEncoder.matches(user.getPassword(), found.getPassword())) {
 			return found.getUserID();
 		}
 		return new AppException("Invalid password", HttpStatus.BAD_REQUEST).getMessage();

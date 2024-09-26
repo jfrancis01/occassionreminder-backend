@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -69,7 +70,7 @@ public class Controller {
 	 * This method adds an occasion to the list of occassions 
 	 * for the logged in user
 	 * @param occassion
-	 * @return
+	 * @return•••••••••••
 	 */
 	
 	@PostMapping("/add")
@@ -103,18 +104,8 @@ public class Controller {
 	 * @return
 	 */
 	@PostMapping("/register")
-	public String registerUser(@RequestBody User user) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String json = mapper.writeValueAsString(userService.registerUser(user)).toString();
-			System.out.println(json);
-			return json;
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return e.getMessage();
-		}
-
+	public ResponseEntity<String> registerUser(@RequestBody User user) {
+		return userService.registerUser(user);
 	}
 	
 	@PostMapping("/login")

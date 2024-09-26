@@ -102,9 +102,10 @@ public class Controller {
 	 * email and password
 	 * @param user
 	 * @return
+	 * @throws JsonProcessingException 
 	 */
 	@PostMapping("/register")
-	public ResponseEntity<String> registerUser(@RequestBody User user) {
+	public ResponseEntity<String> registerUser(@RequestBody User user) throws JsonProcessingException {
 		return userService.registerUser(user);
 	}
 	

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.exceptions.AppException;
 import com.occassionreminder.model.Occassion;
@@ -27,17 +29,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<String> registerUser(User user) {
+	public ResponseEntity<String> registerUser(User user) throws JsonProcessingException {
 		Optional<User> check = userRepo.findByEmail(user.getEmail());
 		if (check.isPresent()) {
-			return new ResponseEntity(MyConstants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(MyConstants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
 		} else {
 			String hashPwd = passEncoder.encode(user.getPassword());
 			user.setPassword(hashPwd);
 			User back = userRepo.save(user);
-			return new ResponseEntity(back.getUserID(), HttpStatus.CREATED);
+			ObjectMapper mapper = new ObjectMapper();
+			return new ResponseEntity<>(mapper.writeValueAsString(back.getUserID()), HttpStatus.CREATED);
 		}
-	}
+	}		
 
 	@Override
 	public String editUser(User user) {

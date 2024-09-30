@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.exceptions.AppException;
+import com.occassionreminder.model.AuthResponseData;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
 import com.occassionreminder.repository.UserRepository;
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
 		}
 		User fromDb = found.get();
 		if (passEncoder.matches(user.getPassword(), fromDb.getPassword())) {
-			return new ResponseEntity<>(mapper.writeValueAsString("userID:" + fromDb.getUserID()), HttpStatus.OK);
+			return new ResponseEntity<>(mapper.writeValueAsString(new AuthResponseData("********", fromDb.getUserID())), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
 	}

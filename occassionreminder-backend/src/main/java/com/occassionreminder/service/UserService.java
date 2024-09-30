@@ -11,7 +11,7 @@ import com.occassionreminder.model.User;
 public interface UserService {
 	
 	public ResponseEntity<String> registerUser(User user) throws JsonProcessingException;
-	public String login(User user);
+	public ResponseEntity<String> login(User user) throws JsonProcessingException;
 	public String editUser(User user);
 	public String deleteUser(String userID);
 	public User getUserProfile(String userID);

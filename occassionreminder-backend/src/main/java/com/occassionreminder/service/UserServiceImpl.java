@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
 	UserRepository userRepo;
 	PasswordEncoder passEncoder;
+	ObjectMapper mapper = new ObjectMapper();
 
 	public UserServiceImpl(UserRepository userRepo, PasswordEncoder passEncoder) {
 		super();
@@ -37,7 +38,6 @@ public class UserServiceImpl implements UserService {
 			String hashPwd = passEncoder.encode(user.getPassword());
 			user.setPassword(hashPwd);
 			User back = userRepo.save(user);
-			ObjectMapper mapper = new ObjectMapper();
 			return new ResponseEntity<>(mapper.writeValueAsString(back.getUserID()), HttpStatus.CREATED);
 		}
 	}		
@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
 	public String deleteUser(String userID) {
 		// TODO Auto-generated method stub
 		return null;
+		
 	}
 
 	@Override
@@ -69,13 +70,16 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String login(User user) {
-		User found = userRepo.findByEmail(user.getEmail())
-				.orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-		if (passEncoder.matches(user.getPassword(), found.getPassword())) {
-			return found.getUserID();
+	public ResponseEntity<String> login(User user) throws JsonProcessingException {
+		Optional<User> found = userRepo.findByEmail(user.getEmail());
+		if(!found.isPresent()) {
+			return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
 		}
-		return new AppException("Invalid password", HttpStatus.BAD_REQUEST).getMessage();
+		User fromDb = found.get();
+		if (passEncoder.matches(user.getPassword(), fromDb.getPassword())) {
+			return new ResponseEntity<>(mapper.writeValueAsString("userID:" + fromDb.getUserID()), HttpStatus.OK);
+		}
+		return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
 	}
 
 }

@@ -110,7 +110,7 @@ public class Controller {
 	}
 	
 	@PostMapping("/login")
-	public String login(@RequestBody User user) {
+	public ResponseEntity<String> login(@RequestBody User user) throws JsonProcessingException {
 		return userService.login(user);
 	}
 	

@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 		}
 		User fromDb = found.get();
 		if (passEncoder.matches(user.getPassword(), fromDb.getPassword())) {
-			return new ResponseEntity<>(mapper.writeValueAsString(new AuthResponseData("********", fromDb.getUserID())), HttpStatus.OK);
+			return new ResponseEntity<>(mapper.writeValueAsString(new AuthResponseData("********", fromDb.getUserID(), "AUTH")), HttpStatus.OK);
 		}
 		return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
 	}

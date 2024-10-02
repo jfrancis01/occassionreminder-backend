@@ -3,6 +3,9 @@ package com.occassionreminder.model;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -103,6 +106,7 @@ public class User {
 	@NonNull
 	private String email;
 	@NonNull
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	@Id
 	@GeneratedValue(strategy=GenerationType.UUID)

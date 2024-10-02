@@ -2,6 +2,8 @@ package com.occassionreminder.model;
 
 public class AuthResponseData {
 	
+	
+	
 	public String getEmail() {
 		return email;
 	}
@@ -17,19 +19,28 @@ public class AuthResponseData {
 	public void setUserID(String userID) {
 		this.userID = userID;
 	}
-
-	String email;
-	String userID;
 	
 	public AuthResponseData() {
 		
 	}
 	
-	public AuthResponseData(String email, String userID) {
-		this.email = email;
-		this.userID = userID;
+	public String getAuthStatus() {
+		return authStatus;
+	}
+
+	public void setAuthStatus(String authStatus) {
+		this.authStatus = authStatus;
 	}
 	
+	public AuthResponseData(String email, String userID, String authStatus) {
+		this.email = email;
+		this.userID = userID;
+		this.authStatus = authStatus;
+	}
+	
+	private String email;
+	private String userID;
+	private String authStatus;
 }
 
 

@@ -24,15 +24,15 @@ public class AuthResponseData {
 		
 	}
 	
-	public String getAuthStatus() {
+	public boolean getAuthStatus() {
 		return authStatus;
 	}
 
-	public void setAuthStatus(String authStatus) {
+	public void setAuthStatus(boolean authStatus) {
 		this.authStatus = authStatus;
 	}
 	
-	public AuthResponseData(String email, String userID, String authStatus) {
+	public AuthResponseData(String email, String userID, boolean authStatus) {
 		this.email = email;
 		this.userID = userID;
 		this.authStatus = authStatus;
@@ -40,7 +40,7 @@ public class AuthResponseData {
 	
 	private String email;
 	private String userID;
-	private String authStatus;
+	private boolean authStatus;
 }
 
 

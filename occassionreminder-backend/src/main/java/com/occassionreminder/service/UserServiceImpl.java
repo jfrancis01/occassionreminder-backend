@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
 	UserRepository userRepo;
 	PasswordEncoder passEncoder;
+	AuthenticationManager authman;
 	ObjectMapper mapper = new ObjectMapper();
 
 	public UserServiceImpl(UserRepository userRepo, PasswordEncoder passEncoder) {
@@ -41,7 +44,7 @@ public class UserServiceImpl implements UserService {
 			User back = userRepo.save(user);
 			return new ResponseEntity<>(mapper.writeValueAsString(back.getUserID()), HttpStatus.CREATED);
 		}
-	}		
+	}
 
 	@Override
 	public String editUser(User user) {
@@ -53,9 +56,9 @@ public class UserServiceImpl implements UserService {
 	public String deleteUser(String userID) {
 		// TODO Auto-generated method stub
 		return null;
-		
-	}
 
+	}
+	
 	@Override
 	public User getUserProfile(String userID) {
 		User user = userRepo.findByUserID(userID)
@@ -71,16 +74,22 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public ResponseEntity<String> login(User user) throws JsonProcessingException {
-		Optional<User> found = userRepo.findByEmail(user.getEmail());
-		if(!found.isPresent()) {
-			return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> login(Authentication authentication) {
+		try {
+			Optional<User> found = userRepo.findByEmail(authentication.getName());
+			if (!found.isPresent()) {
+				return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
+			}
+			else {
+			    return new ResponseEntity<>(
+			    		mapper.writeValueAsString(new AuthResponseData(found.get().getEmail(), found.get().getUserID(), true))
+			    		, HttpStatus.OK);
+			}
+		} 
+		catch (Exception exception) {
+			return new ResponseEntity<String>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
 		}
-		User fromDb = found.get();
-		if (passEncoder.matches(user.getPassword(), fromDb.getPassword())) {
-			return new ResponseEntity<>(mapper.writeValueAsString(new AuthResponseData(fromDb.getEmail(), fromDb.getUserID(), true)), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(MyConstants.INVALID_USERNAME_PASSWORD, HttpStatus.BAD_REQUEST);
+
 	}
 
 }

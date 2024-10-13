@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
-//@Component
+@Component
 public class CustomPwdAuthenticationProvider implements AuthenticationProvider {
 	
 	private final UserDetailsService userDetailsService;

@@ -6,13 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -71,7 +70,7 @@ public class Controller {
 	 * This method adds an occasion to the list of occassions 
 	 * for the logged in user
 	 * @param occassion
-	 * @return•••••••••••
+	 * @return
 	 */
 	
 	@PostMapping("/add")
@@ -110,9 +109,9 @@ public class Controller {
 		return userService.registerUser(user);
 	}
 	
-	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody User user) throws JsonProcessingException {
-		return userService.login(user);
+	@GetMapping("/login")
+	public ResponseEntity<String> login(Authentication authentication){
+		return userService.login(authentication);
 	}
 	
 	@GetMapping("/editUser")

@@ -2,6 +2,7 @@ package com.occassionreminder.securityconfig;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -39,7 +40,8 @@ public class ProjectSecurityConfig {
 		http
 		.securityContext(contextConfig -> contextConfig.requireExplicitSave(false))
 		.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-		//.sessionManagement(smc->smc.invalidSessionUrl("/invalidSession").maximumSessions(3).maxSessionsPreventsLogin(true))
+		.sessionManagement(smc->smc.sessionFixation(sfc -> sfc.changeSessionId())
+				.invalidSessionUrl("/invalidSession").maximumSessions(3).maxSessionsPreventsLogin(true))
 		.cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
 			@Override
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -56,15 +58,15 @@ public class ProjectSecurityConfig {
 				
 				  .csrf(csrfConfig ->
 				  csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
-				  .ignoringRequestMatchers(LOGIN_URL,REGISTER_URL, H2_CONSOLE_URL)
+				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
 				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				 
 		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL).permitAll()
-				.requestMatchers(LOGIN_URL,REGISTER_URL, "/error", "/invalidSession").permitAll()
-				.requestMatchers(OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
+				.requestMatchers(REGISTER_URL, "/error", "/invalidSession").permitAll()
+				.requestMatchers(LOGIN_URL, OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 		//http.formLogin(flc -> flc.disable()); // this is a login page with a user name and password using Spring MVC
 		http.formLogin(withDefaults());

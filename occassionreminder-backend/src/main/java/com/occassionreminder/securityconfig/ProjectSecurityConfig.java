@@ -57,15 +57,15 @@ public class ProjectSecurityConfig {
 				
 				  .csrf(csrfConfig ->
 				  csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
-				  .ignoringRequestMatchers(LOGIN_URL,REGISTER_URL, H2_CONSOLE_URL)
+				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
 				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				 
 		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL).permitAll()
-				.requestMatchers(LOGIN_URL,REGISTER_URL, "/error", "/invalidSession").permitAll()
-				.requestMatchers( OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
+				.requestMatchers(REGISTER_URL, "/error", "/invalidSession").permitAll()
+				.requestMatchers(LOGIN_URL,OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 		//http.formLogin(flc -> flc.disable()); // this is a login page with a user name and password using Spring MVC
 		http.formLogin(withDefaults());

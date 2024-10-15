@@ -30,6 +30,7 @@ public class ProjectSecurityConfig {
 	final String REGISTER_URL = "/occassionsreminder/register";
 	final String LOGIN_URL = "/occassionsreminder/login";
 	final String OCCASSIONS_LIST_URL = "/occassionsreminder/occassions";
+	final String OCCASSION_GET= "/occassionsreminder/occassion";
 	final String OCCASIONS_ADD = "/occassionsreminder/add";
 	final String OCCASSIONS_EDIT = "/occassionsreminder/edit";
 	final String PROFILE_EDIT = "/occassionsreminder/editUser";
@@ -65,7 +66,7 @@ public class ProjectSecurityConfig {
 		.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL).permitAll()
 				.requestMatchers(REGISTER_URL, "/error", "/invalidSession").permitAll()
-				.requestMatchers(LOGIN_URL,OCCASSIONS_LIST_URL, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
+				.requestMatchers(LOGIN_URL,OCCASSIONS_LIST_URL, OCCASSION_GET, OCCASSIONS_EDIT, OCCASIONS_ADD, PROFILE_EDIT).authenticated())
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 		//http.formLogin(flc -> flc.disable()); // this is a login page with a user name and password using Spring MVC
 		http.formLogin(withDefaults());

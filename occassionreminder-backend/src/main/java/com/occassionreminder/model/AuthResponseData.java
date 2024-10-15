@@ -32,15 +32,37 @@ public class AuthResponseData {
 		this.authStatus = authStatus;
 	}
 	
-	public AuthResponseData(String email, String userID, boolean authStatus) {
+	
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public AuthResponseData(String email, String userID, boolean authStatus, String firstName, String lastName) {
 		this.email = email;
 		this.userID = userID;
 		this.authStatus = authStatus;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	
 	private String email;
 	private String userID;
 	private boolean authStatus;
+	private String firstName;
+	private String lastName;
 }
 
 

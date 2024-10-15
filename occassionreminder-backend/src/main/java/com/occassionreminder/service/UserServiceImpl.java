@@ -82,7 +82,9 @@ public class UserServiceImpl implements UserService {
 			}
 			else {
 			    return new ResponseEntity<>(
-			    		mapper.writeValueAsString(new AuthResponseData(found.get().getEmail(), found.get().getUserID(), true))
+			    		mapper.writeValueAsString(
+			    				new AuthResponseData(found.get().getEmail(), found.get().getUserID(), 
+			    						true, found.get().getFirstName(), found.get().getLastName()))
 			    		, HttpStatus.OK);
 			}
 		} 

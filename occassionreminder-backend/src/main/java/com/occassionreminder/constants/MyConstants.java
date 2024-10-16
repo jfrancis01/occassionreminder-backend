@@ -32,5 +32,7 @@ public final class MyConstants {
 	public static final String ERROR_OCCURED = "An error occured";
 	public static final String INVALID_USERNAME_PASSWORD = "Invalid username or password";
 	public static final String INVALID_USERNAME = "Invalid username or password";
+	public static final String INVALID_USERID = "Invalid User ID";
 	public static final String LOGIN_SUCCESSFUL = "Login successful";
+	public static final String UPDATE_SUCCESSFUL = "Updaet Successful";
 }

@@ -114,18 +114,14 @@ public class Controller {
 		return userService.login(authentication);
 	}
 	
-	@GetMapping("/editUser")
-	public String editUser(@RequestParam String userID) {
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			String json = mapper.writeValueAsString(userService.getUserProfile(userID)).toString();
-			System.out.println(json);
-			return json;
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return e.getMessage();
-		}
+	@GetMapping("/getUser")
+	public ResponseEntity<String> getUser(@RequestParam String userID) {
+		return userService.getUserProfile(userID);
+	}
+	
+	@PutMapping("/editUser")
+	public ResponseEntity<String> editUser(@RequestBody User user) {
+		return userService.editUser(user);
 	}
 	
 	private Date setDate(int year, int month, int day) {

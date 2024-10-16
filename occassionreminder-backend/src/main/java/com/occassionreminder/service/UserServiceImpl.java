@@ -47,9 +47,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String editUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<String>  editUser(User user) {
+		Optional<User> original = userRepo.findByUserID(user.getUserID());
+		if(!original.isPresent()) {
+			return new ResponseEntity<>(MyConstants.INVALID_USERID, HttpStatus.BAD_REQUEST);
+		}
+		else {
+			userRepo.updateUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getUserID());
+		}
+		return new ResponseEntity<>(MyConstants.UPDATE_SUCCESSFUL, HttpStatus.OK);
 	}
 
 	@Override
@@ -60,10 +66,20 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User getUserProfile(String userID) {
-		User user = userRepo.findByUserID(userID)
-				.orElseThrow(() -> new AppException("User not found", HttpStatus.NOT_FOUND));
-		return user;
+	public ResponseEntity<String>  getUserProfile(String userID) {
+		Optional<User> user = userRepo.findByUserID(userID);
+		if(user.isPresent()) {
+			try {
+				return new ResponseEntity<>(
+			    		mapper.writeValueAsString(
+			    				new User(user.get().getUserID(),user.get().getFirstName(), user.get().getLastName(),user.get().getEmail()))
+			    		, HttpStatus.OK);
+			}
+			catch(Exception e) {
+				return new ResponseEntity<String>(MyConstants.ERROR_OCCURED,HttpStatus.BAD_REQUEST);
+			}
+		}
+		return new ResponseEntity<String>(MyConstants.INVALID_USERID,HttpStatus.BAD_REQUEST);
 	}
 
 	@Override

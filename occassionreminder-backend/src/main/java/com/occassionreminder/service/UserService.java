@@ -13,9 +13,9 @@ public interface UserService {
 	
 	public ResponseEntity<String> registerUser(User user) throws JsonProcessingException;
 	public ResponseEntity<String> login(Authentication authentication);
-	public String editUser(User user);
+	public ResponseEntity<String>  editUser(User user);
 	public String deleteUser(String userID);
-	public User getUserProfile(String userID);
+	public ResponseEntity<String> getUserProfile(String userID);
 	public ArrayList<Occassion> getOccassions(String userID);
 
 }

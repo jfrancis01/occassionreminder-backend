@@ -71,7 +71,8 @@ public class ProjectSecurityConfig {
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 		//http.formLogin(flc -> flc.disable()); // this is a login page with a user name and password using Spring MVC
 		http.formLogin(withDefaults());
-		http.httpBasic(withDefaults()); // this is header based
+		http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())); // this is header based
+		http.exceptionHandling(ehc -> ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));
 		return http.build();
 	}
 	

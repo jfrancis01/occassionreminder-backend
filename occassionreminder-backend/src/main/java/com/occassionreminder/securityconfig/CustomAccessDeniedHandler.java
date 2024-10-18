@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
+	//TODO Need to fix and test check into JWT stream
 
 	@Override
 	public void handle(HttpServletRequest request, HttpServletResponse response,

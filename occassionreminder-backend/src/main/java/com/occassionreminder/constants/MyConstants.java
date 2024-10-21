@@ -35,4 +35,7 @@ public final class MyConstants {
 	public static final String INVALID_USERID = "Invalid User ID";
 	public static final String LOGIN_SUCCESSFUL = "Login successful";
 	public static final String UPDATE_SUCCESSFUL = "Updaet Successful";
+	public static final String JWT_SECRET_KEY = "JWT_SECRET_KEY";
+	public static final String DEFUALT_SECRET_KEY = "scratchmybumandsmellyourfingersscratchmybumandsmellyourfingers";
+	public static final String JWT_HEADER = "Authorization";
 }

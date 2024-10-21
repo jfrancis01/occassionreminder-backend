@@ -2,12 +2,11 @@ package com.occassionreminder.securityconfig;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
-import java.awt.image.AreaAveragingScaleFilter;
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,6 +20,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.occassionreminder.filters.CsrfCookieFilter;
+import com.occassionreminder.filters.JWTTokenGeneratorFilter;
+import com.occassionreminder.filters.JWTTokenValidationFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -41,8 +42,8 @@ public class ProjectSecurityConfig {
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		CsrfTokenRequestAttributeHandler crsfTokenRequestHandler = new CsrfTokenRequestAttributeHandler();
 		http
-		.securityContext(contextConfig -> contextConfig.requireExplicitSave(false))
-		.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+		//.securityContext(contextConfig -> contextConfig.requireExplicitSave(false)) // removed and only used for JSESSIONID
+		.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
 			@Override
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -51,6 +52,7 @@ public class ProjectSecurityConfig {
 				myconfig.setAllowedMethods(Collections.singletonList("*"));
 				myconfig.setAllowCredentials(true);
 				myconfig.setAllowedHeaders(Collections.singletonList("*"));
+				myconfig.setExposedHeaders(Arrays.asList("Authorization"));
 				myconfig.setMaxAge(3600L);
 				return myconfig;
 			}
@@ -63,6 +65,8 @@ public class ProjectSecurityConfig {
 				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				 
 		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+		.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+		.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL).permitAll()

@@ -57,15 +57,15 @@ public class ProjectSecurityConfig {
 				return myconfig;
 			}
 		}))
-		//.csrf(csrf -> csrf.disable())
+		.csrf(csrf -> csrf.disable())
 				
-				  .csrf(csrfConfig ->
-				  csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
-				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
-				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-				 
-		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-		.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+				  //.csrf(csrfConfig ->
+				  //csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
+				  //.ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
+				  //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+				  
+		.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)		 
+		//.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
 		.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests

@@ -2,11 +2,13 @@ package com.occassionreminder.securityconfig;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+import java.net.http.HttpRequest;
 import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -43,7 +45,7 @@ public class ProjectSecurityConfig {
 		CsrfTokenRequestAttributeHandler crsfTokenRequestHandler = new CsrfTokenRequestAttributeHandler();
 		http
 		//.securityContext(contextConfig -> contextConfig.requireExplicitSave(false)) // removed and only used for JSESSIONID
-		.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		//.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
 			@Override
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -57,15 +59,15 @@ public class ProjectSecurityConfig {
 				return myconfig;
 			}
 		}))
-		.csrf(csrf -> csrf.disable())
+		//.csrf(csrf -> csrf.disable())
 				
-				  //.csrf(csrfConfig ->
-				  //csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
-				  //.ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
-				  //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+				  .csrf(csrfConfig ->
+				  csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
+				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
+				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				  
 		.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)		 
-		//.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
 		.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests

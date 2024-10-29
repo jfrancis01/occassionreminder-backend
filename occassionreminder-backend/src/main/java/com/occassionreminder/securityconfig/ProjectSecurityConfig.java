@@ -22,8 +22,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.occassionreminder.filters.CsrfCookieFilter;
-import com.occassionreminder.filters.JWTTokenGeneratorFilter;
-import com.occassionreminder.filters.JWTTokenValidationFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -65,10 +63,8 @@ public class ProjectSecurityConfig {
 				  csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
 				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
 				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-				  
-		.addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)		 
+				  	 
 		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-		.addFilterBefore(new JWTTokenValidationFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL).permitAll()
@@ -82,8 +78,4 @@ public class ProjectSecurityConfig {
 		return http.build();
 	}
 	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-	}
 }

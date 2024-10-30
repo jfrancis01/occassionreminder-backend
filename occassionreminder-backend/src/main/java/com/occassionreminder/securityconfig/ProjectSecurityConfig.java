@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
@@ -29,6 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class ProjectSecurityConfig {
 	
 	final String REGISTER_URL = "/occassionsreminder/register";
+	final String WLECOME_PUBLIC_URL = "/occassionsreminder/welcome";
 	final String LOGIN_URL = "/occassionsreminder/login";
 	final String OCCASSIONS_LIST_URL = "/occassionsreminder/occassions";
 	final String OCCASSION_GET= "/occassionsreminder/occassion";
@@ -41,9 +43,11 @@ public class ProjectSecurityConfig {
 	@Bean
 	SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		CsrfTokenRequestAttributeHandler crsfTokenRequestHandler = new CsrfTokenRequestAttributeHandler();
+		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new KeyCloakRoleConverter());
 		http
 		//.securityContext(contextConfig -> contextConfig.requireExplicitSave(false)) // removed and only used for JSESSIONID
-		//.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		.sessionManagement(sessionConfig-> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.cors(corsConfig -> corsConfig.configurationSource(new CorsConfigurationSource() {
 			@Override
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
@@ -61,19 +65,16 @@ public class ProjectSecurityConfig {
 				
 				  .csrf(csrfConfig ->
 				  csrfConfig.csrfTokenRequestHandler(crsfTokenRequestHandler)
-				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL)
+				  .ignoringRequestMatchers(REGISTER_URL, H2_CONSOLE_URL, WLECOME_PUBLIC_URL)
 				  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				  	 
 		.addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests
-				.requestMatchers(H2_CONSOLE_URL).permitAll()
-				.requestMatchers(REGISTER_URL, "/error", "/invalidSession").permitAll()
+				.requestMatchers(H2_CONSOLE_URL, REGISTER_URL, WLECOME_PUBLIC_URL, "/error").permitAll()
 				.requestMatchers(LOGIN_URL,OCCASSIONS_LIST_URL, OCCASSION_GET, OCCASSIONS_EDIT, OCCASIONS_ADD, USER_GET, USER_EDIT).authenticated())
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-		//http.formLogin(flc -> flc.disable()); // this is a login page with a user name and password using Spring MVC
-		http.formLogin(withDefaults());
-		http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint())); // this is header based
+		http.oauth2ResourceServer(rsc -> rsc.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 		http.exceptionHandling(ehc -> ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));
 		return http.build();
 	}

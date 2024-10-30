@@ -23,27 +23,28 @@ import com.occassionreminder.repository.UserRepository;
 public class UserServiceImpl implements UserService {
 
 	UserRepository userRepo;
-	PasswordEncoder passEncoder;
+	//PasswordEncoder passEncoder;
 	AuthenticationManager authman;
 	ObjectMapper mapper = new ObjectMapper();
 
-	public UserServiceImpl(UserRepository userRepo, PasswordEncoder passEncoder) {
+	public UserServiceImpl(UserRepository userRepo) {
 		super();
-		this.passEncoder = passEncoder;
+		//this.passEncoder = passEncoder;
 		this.userRepo = userRepo;
 	}
 
 	@Override
 	public ResponseEntity<String> registerUser(User user) throws JsonProcessingException {
-		Optional<User> check = userRepo.findByEmail(user.getEmail());
-		if (check.isPresent()) {
-			return new ResponseEntity<>(MyConstants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST);
-		} else {
-			String hashPwd = passEncoder.encode(user.getPassword());
-			user.setPassword(hashPwd);
-			User back = userRepo.save(user);
-			return new ResponseEntity<>(mapper.writeValueAsString(back.getUserID()), HttpStatus.CREATED);
-		}
+		/*
+		 * Optional<User> check = userRepo.findByEmail(user.getEmail()); if
+		 * (check.isPresent()) { return new
+		 * ResponseEntity<>(MyConstants.EMAIL_ALREADY_EXISTS, HttpStatus.BAD_REQUEST); }
+		 * else { String hashPwd = passEncoder.encode(user.getPassword());
+		 * user.setPassword(hashPwd); User back = userRepo.save(user); return new
+		 * ResponseEntity<>(mapper.writeValueAsString(back.getUserID()),
+		 * HttpStatus.CREATED); }
+		 */
+		return null;
 	}
 
 	@Override

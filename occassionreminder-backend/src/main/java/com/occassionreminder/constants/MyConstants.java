@@ -38,4 +38,5 @@ public final class MyConstants {
 	public static final String JWT_SECRET_KEY = "JWT_SECRET_KEY";
 	public static final String DEFUALT_SECRET_KEY = "nNYrCCg0Tqu02VRvoySj9FbvjKSp8W8fnNYrCCg0Tqu02VRvoySj9FbvjKSp8W8f";
 	public static final String JWT_HEADER = "Authorization";
+	public static final String KEYCLOACK_REGISTER_USER_ENDPOINT = "/admin/realms/OccassionReminder-dev/users";
 }

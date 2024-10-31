@@ -1,19 +1,25 @@
 package com.occassionreminder.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.constants.MyConstants;
-import com.occassionreminder.exceptions.AppException;
 import com.occassionreminder.model.AuthResponseData;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.model.User;
@@ -26,15 +32,29 @@ public class UserServiceImpl implements UserService {
 	//PasswordEncoder passEncoder;
 	AuthenticationManager authman;
 	ObjectMapper mapper = new ObjectMapper();
+	@Autowired
+	private Environment environment;
+	@Autowired
+	private RestTemplate restTemplate;
 
-	public UserServiceImpl(UserRepository userRepo) {
+	public UserServiceImpl(UserRepository userRepo, RestTemplate restTemplate) {
 		super();
 		//this.passEncoder = passEncoder;
 		this.userRepo = userRepo;
+		this.restTemplate = restTemplate;
 	}
 
 	@Override
 	public ResponseEntity<String> registerUser(User user) throws JsonProcessingException {
+		
+		String base = environment.getProperty("KEYCLOAK_BASE");
+		if(base != null && !base.isEmpty()) {
+			 HttpHeaders headers = new HttpHeaders();
+		      headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		      HttpEntity<User> entity = new HttpEntity<User>(user, headers);
+		      String response = restTemplate.exchange(base + MyConstants.KEYCLOACK_REGISTER_USER_ENDPOINT, 
+		    		  HttpMethod.POST, entity, String.class) .getBody();
+		}
 		/*
 		 * Optional<User> check = userRepo.findByEmail(user.getEmail()); if
 		 * (check.isPresent()) { return new
@@ -110,5 +130,5 @@ public class UserServiceImpl implements UserService {
 		}
 
 	}
-
+	
 }

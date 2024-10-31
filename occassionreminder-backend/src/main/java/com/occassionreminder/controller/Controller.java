@@ -52,7 +52,7 @@ public class Controller {
 
 	@GetMapping("/occassions")
 	public List<Occassion> getOccassions(@RequestParam String  userID){
-		return this.userService.getOccassions(userID);
+		return this.occassionService.getOccassions(userID);
 	}
 	
 	/**

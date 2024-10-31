@@ -85,13 +85,13 @@ public class User {
 	}
 	
 
-	public Set<Occassion> getOccassions() {
-		return this.occassions;
-	}
+	//public Set<Occassion> getOccassions() {
+	//	return this.occassions;
+	//}
 
-	public void setOccassions(Set<Occassion> occassions) {
-		this.occassions = occassions;
-	}
+	//public void setOccassions(Set<Occassion> occassions) {
+	//	this.occassions = occassions;
+	//}
 	
 	@Override
 	public String toString(){
@@ -112,7 +112,7 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.UUID)
 	private String userID;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name="userid")
-	private Set<Occassion> occassions;
+	//@OneToMany(cascade = CascadeType.ALL)
+	//@JoinColumn(name="userid")
+	//private Set<Occassion> occassions;
 }

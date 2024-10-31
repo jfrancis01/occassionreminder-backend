@@ -1,9 +1,7 @@
 package com.occassionreminder.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.occassionreminder.model.Occassion;
@@ -45,6 +43,12 @@ public class OccassionServiceImpl implements OccassionService {
 	public Occassion getOccassion(int occassionID) {
 		return occRepo.findById(occassionID).get();
 	}
-	
+
+
+	@Override
+	public List<Occassion> getOccassions(String userID) {
+		return occRepo.findByUserID(userID);
+	}
+
 	
 }

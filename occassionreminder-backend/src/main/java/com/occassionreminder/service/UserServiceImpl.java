@@ -1,6 +1,7 @@
 package com.occassionreminder.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.keycloak.OAuth2Constants;
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.constants.MyConstants;
 import com.occassionreminder.model.AuthResponseData;
@@ -67,6 +69,7 @@ public class UserServiceImpl implements UserService {
             System.out.println("Access Token for client: " + tokenResponse.getToken());
         } catch (Exception e) {
             System.out.println("Failed to retrieve client access token: " + e.getMessage());
+            return new ResponseEntity<String>(MyConstants.ERROR_OCCURED, HttpStatus.BAD_REQUEST);
         }
     
 		// set user representation
@@ -78,7 +81,6 @@ public class UserServiceImpl implements UserService {
 		newuser.setEnabled(true);
 		// Get realm
 		RealmResource realmResource = keycloak.realm(realm);
-		System.out.print(realmResource.toRepresentation().toString());
 		UsersResource usersResource = realmResource.users();
 		// create user
 		Response response = usersResource.create(newuser);
@@ -100,12 +102,32 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<String> editUser(User user) {
-		Optional<User> original = userRepo.findByUserID(user.getUserID());
-		if (!original.isPresent()) {
-			return new ResponseEntity<>(MyConstants.INVALID_USERID, HttpStatus.BAD_REQUEST);
-		} else {
-			userRepo.updateUser(user.getEmail(), user.getFirstName(), user.getLastName(), user.getUserID());
+		
+		Keycloak keycloak = getAdminKeycloak();
+		try {
+            AccessTokenResponse tokenResponse = keycloak.tokenManager().getAccessToken();
+            System.out.println("Access Token for client: " + tokenResponse.getToken());
+        } catch (Exception e) {
+            System.out.println("Failed to retrieve client access token: " + e.getMessage());
+            return new ResponseEntity<String>(MyConstants.ERROR_OCCURED, HttpStatus.BAD_REQUEST);
+        }
+		RealmResource realmResource = keycloak.realm(realm);
+		UsersResource usersResource = realmResource.users();
+		List<UserRepresentation> search = usersResource.search("id:"+user.getUserID(), 1, 1, false);
+		if(search.size() > 1) {
+			return new ResponseEntity<>(MyConstants.USERID_ID_NOT_UNIQUE, HttpStatus.FORBIDDEN);
 		}
+		if(search.size() < 1) {
+			return new ResponseEntity<>(MyConstants.USER_ID_INVALID, HttpStatus.BAD_REQUEST);
+		}
+		
+		UserRepresentation original = search.get(0);
+		original.setFirstName(user.getFirstName());
+		original.setLastName(user.getLastName());
+		original.setEmail(user.getEmail());
+		UserResource userResource = usersResource.get(user.getUserID());
+		userResource.update(original);
+		
 		return new ResponseEntity<>(MyConstants.UPDATE_SUCCESSFUL, HttpStatus.OK);
 	}
 
@@ -118,16 +140,32 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<String> getUserProfile(String userID) {
-		Optional<User> user = userRepo.findByUserID(userID);
-		if (user.isPresent()) {
-			try {
-				return new ResponseEntity<>(mapper.writeValueAsString(new User(user.get().getUserID(),
-						user.get().getFirstName(), user.get().getLastName(), user.get().getEmail())), HttpStatus.OK);
-			} catch (Exception e) {
-				return new ResponseEntity<String>(MyConstants.ERROR_OCCURED, HttpStatus.BAD_REQUEST);
-			}
+		
+		Keycloak keycloak = getAdminKeycloak();
+		try {
+            AccessTokenResponse tokenResponse = keycloak.tokenManager().getAccessToken();
+            System.out.println("Access Token for client: " + tokenResponse.getToken());
+        } catch (Exception e) {
+            System.out.println("Failed to retrieve client access token: " + e.getMessage());
+            return new ResponseEntity<String>(MyConstants.ERROR_OCCURED, HttpStatus.BAD_REQUEST);
+        }
+		RealmResource realmResource = keycloak.realm(realm);
+		UsersResource usersResource = realmResource.users();
+		List<UserRepresentation> search = usersResource.search("id:"+userID, 1, 1, true);
+		if(search.size() > 1) {
+			return new ResponseEntity<>(MyConstants.USERID_ID_NOT_UNIQUE, HttpStatus.FORBIDDEN);
 		}
-		return new ResponseEntity<String>(MyConstants.INVALID_USERID, HttpStatus.BAD_REQUEST);
+		if(search.size() < 1) {
+			return new ResponseEntity<>(MyConstants.USER_ID_INVALID, HttpStatus.BAD_REQUEST);
+		}
+		UserRepresentation original = search.get(0);
+		try {
+			return new ResponseEntity<>(mapper.writeValueAsString(new User(original.getId(),
+					original.getFirstName(), original.getLastName(), original.getEmail())), HttpStatus.OK);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(MyConstants.ERROR_OCCURED, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@Override

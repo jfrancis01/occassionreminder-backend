@@ -46,4 +46,7 @@ public final class MyConstants {
 	public static final String KEYCLOAK_SERVER_API_CLIENTID = "KEYCLOAK_SERVER_API_CLIENTID";
 	public static final String KEYCLOAK_SERVICE_API_SECRET = "KEYCLOAK_SERVICE_API_SECRET";
 	public static final String KEYCLOAK_TOKEN_END_POINT = "KEYCLOAK_TOKEN_END_POINT";
+	public static final String USERID_ID_NOT_UNIQUE = "User ID not unique. Please contact your administrator";
+	public static final String USER_ID_INVALID = "User ID invalid. Please contact your administrator";
+	public static final String OKAY = "OKAY";
 }

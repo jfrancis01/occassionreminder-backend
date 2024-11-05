@@ -122,7 +122,7 @@ public class Controller {
 	
 	@PutMapping("/editUser")
 	public ResponseEntity<String> editUser(@RequestBody User user) {
-		return userService.editUser(user);
+			return userService.editUser(user);
 	}
 	
 	private Date setDate(int year, int month, int day) {

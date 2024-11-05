@@ -83,21 +83,26 @@ public class UserServiceImpl implements UserService {
 		RealmResource realmResource = keycloak.realm(realm);
 		UsersResource usersResource = realmResource.users();
 		// create user
-		Response response = usersResource.create(newuser);
-		System.out.print(response.getStatus());
-		String userID = CreatedResponseUtil.getCreatedId(response);
-		if (userID == null || userID.isEmpty()) {
-			return new ResponseEntity<>(MyConstants.ERROR_OCCURED, HttpStatus.METHOD_FAILURE);
+		try {
+			Response response = usersResource.create(newuser);
+			System.out.print(response.getStatus());
+			String userID = CreatedResponseUtil.getCreatedId(response);
+			if (userID == null || userID.isEmpty()) {
+				return new ResponseEntity<>(MyConstants.ERROR_OCCURED, HttpStatus.METHOD_FAILURE);
+			}
+			// set credentials
+			CredentialRepresentation passwordCred = new CredentialRepresentation();
+			passwordCred.setTemporary(false);
+			passwordCred.setType(CredentialRepresentation.PASSWORD);
+			passwordCred.setValue(user.getPassword());
+			UserResource userResource = usersResource.get(userID);
+			userResource.resetPassword(passwordCred);
+			return new ResponseEntity<>(mapper.writeValueAsString(MyConstants.REGISTRATION_COMPLETE),HttpStatus.OK);
 		}
-		// set credentials
-		CredentialRepresentation passwordCred = new CredentialRepresentation();
-		passwordCred.setTemporary(false);
-		passwordCred.setType(CredentialRepresentation.PASSWORD);
-		passwordCred.setValue(user.getPassword());
-		UserResource userResource = usersResource.get(userID);
-		userResource.resetPassword(passwordCred);
-
-		return new ResponseEntity<>(MyConstants.REGISTRATION_COMPLETE, HttpStatus.OK);
+		
+		catch(Exception createException) {
+			return new ResponseEntity<>(createException.getMessage(), HttpStatus.METHOD_FAILURE);
+		}
 	}
 
 	@Override

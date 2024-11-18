@@ -36,6 +36,7 @@ public class ProjectSecurityConfig {
 	final String OCCASSION_GET= "/occassionsreminder/occassion";
 	final String OCCASIONS_ADD = "/occassionsreminder/add";
 	final String OCCASSIONS_EDIT = "/occassionsreminder/edit";
+	final String OCCASSIONS_DELETE = "/occassionsreminder/delete";
 	final String USER_GET= "/occassionsreminder/getUser";
 	final String USER_EDIT= "/occassionsreminder/editUser";
 	final String H2_CONSOLE_URL = "/h2/**";
@@ -72,7 +73,7 @@ public class ProjectSecurityConfig {
 		.requiresChannel(rcc -> rcc.anyRequest().requiresInsecure())
 		.authorizeHttpRequests((requests) -> requests
 				.requestMatchers(H2_CONSOLE_URL, REGISTER_URL, WLECOME_PUBLIC_URL, "/error").permitAll()
-				.requestMatchers(LOGIN_URL,OCCASSIONS_LIST_URL, OCCASSION_GET, OCCASSIONS_EDIT, OCCASIONS_ADD, USER_GET, USER_EDIT).authenticated())
+				.requestMatchers(LOGIN_URL,OCCASSIONS_LIST_URL, OCCASSION_GET, OCCASSIONS_EDIT, OCCASIONS_ADD, OCCASSIONS_DELETE, USER_GET, USER_EDIT).authenticated())
 		.headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
 		http.oauth2ResourceServer(rsc -> rsc.jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)));
 		http.exceptionHandling(ehc -> ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));

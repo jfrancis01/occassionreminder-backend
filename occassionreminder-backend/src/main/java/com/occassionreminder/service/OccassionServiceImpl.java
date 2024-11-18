@@ -2,8 +2,12 @@ package com.occassionreminder.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.occassionreminder.model.Occassion;
 import com.occassionreminder.repository.OccassionRepository;
 
@@ -13,7 +17,7 @@ public class OccassionServiceImpl implements OccassionService {
 	
 	OccassionRepository occRepo;
 	
-
+	ObjectMapper mapper = new ObjectMapper();
 	public OccassionServiceImpl(OccassionRepository occRepo) {
 		super();
 		this.occRepo = occRepo;
@@ -48,6 +52,12 @@ public class OccassionServiceImpl implements OccassionService {
 	@Override
 	public List<Occassion> getOccassions(String userID) {
 		return occRepo.findByUserID(userID);
+	}
+
+
+	@Override
+	public void deleteOccassion(int occassionID) {
+		occRepo.deleteById(occassionID);
 	}
 
 	

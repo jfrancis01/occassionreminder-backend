@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,7 +25,6 @@ import com.occassionreminder.service.OccassionService;
 import com.occassionreminder.service.UserService;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/occassionsreminder")
 public class Controller {
 	
@@ -123,6 +123,11 @@ public class Controller {
 	@PutMapping("/editUser")
 	public ResponseEntity<String> editUser(@RequestBody User user) {
 			return userService.editUser(user);
+	}
+	
+	@GetMapping("/delete")
+	public void delete(@RequestParam int  occassionID) {
+		occassionService.deleteOccassion(occassionID);
 	}
 	
 	private Date setDate(int year, int month, int day) {

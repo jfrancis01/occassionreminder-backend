@@ -48,6 +48,14 @@ public class UserServiceImpl implements UserService {
 		this.userRepo = userRepo;
 	}
 	
+	/**
+	 * The admin manage user needs to be created in the appropriate realm with the 
+	 * following steps:
+	 *  1. Create a client with standards flow, client_authentication, direct access grants 
+	 *  	and service  accounts roles checked
+	 *  2. In the service account roles tab make sure you add "manage-users"
+	 * @return
+	 */
 	private Keycloak getAdminKeycloak() {
 		this.base = environment.getProperty(MyConstants.KEYCLOAK_BASE);
 		this.realm = environment.getProperty(MyConstants.KEYCLOAK_REALM);

@@ -90,8 +90,21 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                	<compilerArguments>
+                    	<arg>-parameters</arg>
+                </compilerArguments>
+            	</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
 </project>
+<!-- 
+
+Four things must match 
+1) Project->Java Build Path->Libraries->JRE version 
+2) Project->Java Compiler-> Compiler Compliance Level 
+3) Project->Project Facets->Java->Version 
+4) (if using Maven) pom.xml - maven-compiler-plugin artifact source and target
+-->

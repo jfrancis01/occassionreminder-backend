@@ -30,6 +30,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<start-class>com.occassionreminder.OccassionreminderBackendApplication</start-class>
 	</properties>
 	<dependencies>
 		<dependency>

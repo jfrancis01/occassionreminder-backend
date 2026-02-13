@@ -1,19 +1,17 @@
 package com.occassionreminder.securityconfig;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import java.net.http.HttpRequest;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -28,6 +26,9 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 public class ProjectSecurityConfig {
+	
+	@Autowired
+	private Environment environment;
 	
 	final String REGISTER_URL = "/occassionsreminder/register";
 	final String WLECOME_PUBLIC_URL = "/occassionsreminder/welcome";
@@ -79,5 +80,12 @@ public class ProjectSecurityConfig {
 		http.exceptionHandling(ehc -> ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));
 		return http.build();
 	}
+	
+	@Bean
+	public JwtDecoder jwtDecoder() {
+        // You can use a factory method with your issuer URI
+        //String issuerUri = "https://your-authorization-server.com";
+        return JwtDecoders.fromIssuerLocation(environment.getProperty("ISSUER_URI"));
+    }		
 	
 }
